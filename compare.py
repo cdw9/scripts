@@ -9,13 +9,14 @@
 """
 
 import re
+from collections import OrderedDict
 from sys import argv
 
 script, versions1, versions2 = argv
 
 
 def filter_products(file):
-    """ clean up the file so we end up with a list
+    """ clean up the file so we end up with a dictionary
         of the products and their versions
     """
     f = open(file)
@@ -36,13 +37,16 @@ def filter_products(file):
         vkey = re.sub('(\-.*$)', '', line)
         vval = re.sub('(.*[\-])', '', line)
         versions[vkey] = vval
-    return versions
+    return OrderedDict(sorted(versions.items(), key=lambda t: t[0].lower()))
 
 f1v = filter_products(versions1)
 f2v = filter_products(versions2)
 
 output = ''
 
+for product in f2v:
+    if product not in f1v:
+        output += "N/A > {0}\n".format(product)
 for product in f1v:
     if product not in f2v:
         output += "{0} > N/A\n".format(product)
@@ -50,9 +54,5 @@ for product in f1v:
     if f1v[product] == f2v[product]:
         continue
     output += "{0} {1} > {2}\n".format(product, f1v[product], f2v[product])
-
-for product in f2v:
-    if product not in f1v:
-        output += "N/A > {0}\n".format(product)
 
 print output
