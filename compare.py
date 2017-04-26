@@ -1,7 +1,11 @@
-"""pass two files as arguments
+"""pass two instance/client scripts as arguments
+   scripts should have eggs listed,
+   like https://gist.github.com/cdw9/c6d8ab6c28504d179b81856fb7a37e1d
+
    $ python compare.py file1 file2
-   script will output version differences
-   between the two files
+
+   script will output version
+   differences between the two files
 """
 
 import re
