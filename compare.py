@@ -32,10 +32,17 @@ def filter_products(file):
             continue
         else:
             write = True
+        if line[-6:] == "/src',":
+            line = line[:-6]
         line = re.sub('(.*[\/])', '', line)
-        line = re.sub('(-py.*$)', '', line)
-        vkey = re.sub('(\-.*$)', '', line)
-        vval = re.sub('(.*[\-])', '', line)
+        if '.egg' in line[-6:]:
+            line = re.sub('(-py.*$)', '', line)
+            vkey = re.sub('(\-.*$)', '', line)
+            vval = re.sub('(.*[\-])', '', line)
+        else:
+            line = line.replace("',","")
+            vkey = line
+            vval = "(develop)"
         versions[vkey] = vval
     return OrderedDict(sorted(versions.items(), key=lambda t: t[0].lower()))
 
@@ -46,10 +53,10 @@ output = ''
 
 for product in f2v:
     if product not in f1v:
-        output += "N/A > {0}\n".format(product)
+        output += "N/A > {0} {1}\n".format(product, f2v[product])
 for product in f1v:
     if product not in f2v:
-        output += "{0} > N/A\n".format(product)
+        output += "{0} {1} > N/A\n".format(product, f1v[product])
         continue
     if f1v[product] == f2v[product]:
         continue
