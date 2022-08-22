@@ -62,4 +62,4 @@ for product in f1v:
         continue
     output += "{0} {1} > {2}\n".format(product, f1v[product], f2v[product])
 
-print output
+print(output)
